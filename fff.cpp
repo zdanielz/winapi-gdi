@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-void CreatRect(HDC dc, int nx, int ny, int SizeOfPart, int width, int height, int padding, int number, HBITMAP hbm) {
+void CreatRect(HDC dc, int nx, int ny, int SizeOfPart, int width, int height, int padding, HBITMAP hbm) {
 	SelectObject(dc, hbm);
 	COLORREF color = RGB(226, 124, 62);
 
@@ -14,10 +14,10 @@ void CreatRect(HDC dc, int nx, int ny, int SizeOfPart, int width, int height, in
 	hBrush = CreateSolidBrush(color);
 	SelectObject(dc, hBrush);
 
-	p[0] = { nx * number + padding, ny * number + padding };
-	p[1] = { nx * number + padding, ny * number + SizeOfPart + padding };
-	p[2] = { nx * number + SizeOfPart + padding, ny * number + SizeOfPart + padding };
-	p[3] = { nx * number + SizeOfPart + padding, ny * number + padding };
+	p[0] = { nx + (padding * nx * SizeOfPart), ny + (padding * ny * SizeOfPart) };
+	p[1] = { nx + SizeOfPart + (padding * nx * SizeOfPart), ny + (padding * ny * SizeOfPart) };
+	p[2] = { nx + SizeOfPart + (padding * nx * SizeOfPart), ny + SizeOfPart + (padding * ny * SizeOfPart) };
+	p[3] = { nx + (padding * nx * SizeOfPart), ny + SizeOfPart + (padding * ny * SizeOfPart) };
 
 	Polygon(dc, p, size);
 }
@@ -28,7 +28,6 @@ int main(void) {
 
 	int SizeOfPart = 5;
 	int padding = 1;
-	int number = 0;
 
 	HDC dc = GetDC(NULL);
 	HWND hWnd = GetDesktopWindow();
@@ -41,8 +40,7 @@ int main(void) {
 
 	for (size_t y = 0; y < height / (SizeOfPart + padding); y++) {
 		for (size_t x = 0; x < width / (SizeOfPart + padding); x++) {
-			number++;
-			CreatRect(dcCompatible, x, y, SizeOfPart, width, height, padding, number, hbm);
+			CreatRect(dcCompatible, x, y, SizeOfPart, width, height, padding, hbm);
 		}
 	}
 
